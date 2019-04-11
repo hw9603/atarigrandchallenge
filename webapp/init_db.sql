@@ -19,6 +19,7 @@ INSERT INTO games(id, name, rom, ai_score) VALUES (1, 'Video Pinball', 'pinball'
 INSERT INTO games(id, name, rom, ai_score) VALUES (2, 'Ms. Pacman', 'mspacman', 2311);
 INSERT INTO games(id, name, rom, ai_score) VALUES (3, 'Space Invaders', 'spaceinvaders', 1976);
 INSERT INTO games(id, name, rom, ai_score) VALUES (4, 'Montezuma''s revenge', 'revenge', 1);
+INSERT INTO games(id, name, rom, ai_score) VALUES (5, 'Seaquest', 'seaquest', 1);
 
 INSERT INTO actions(id, name) VALUES (0, 'NOOP');
 INSERT INTO actions(id, name) VALUES (1, 'FIRE');

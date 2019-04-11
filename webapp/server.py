@@ -42,14 +42,14 @@ def get_quantiles(rom):
 @app.route('/')
 @mobile_template('{mobile/}index.html')
 def index(template):
-  rom = random.choice(['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge']) 
+  rom = random.choice(['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge','seaquest']) 
   ai_score = Game.query.filter_by(rom=rom).first().ai_score
   return render_template(template, rom=rom, ai_score=ai_score)
 
 @app.route('/<rom>')
 @mobile_template('/{mobile/}index.html')
 def index_rom(template, rom):
-  if(rom not in ['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge']):
+  if(rom not in ['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge','seaquest']):
     return redirect('/')
   ai_score = Game.query.filter_by(rom=rom).first().ai_score
   return render_template(template, rom=rom, ai_score=ai_score)
@@ -57,7 +57,7 @@ def index_rom(template, rom):
 @app.route('/api/save', methods=['POST'])
 def save_sequence():
   resp = request.get_json();
-  print('============================') 
+  print('============================')
   trajectory = Trajectory(game_id = resp['game_id'], player_type_id = 1, init_state = json.dumps(resp['init_state']), actions = json.dumps(resp['trajectory']), final_score=resp['final_score'])
   #get traj id here
   db.session.add(trajectory)
@@ -92,7 +92,7 @@ DATASET_PATH = 'data/'
 def save_trajectory():
   resp = request.get_json()
   rom = resp['rom']
-  if rom not in ['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge']:
+  if rom not in ['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge','seaquest']:
     return 'Unknown rom', 400
   traj = resp['trajectory']
   # get last file in the folder num

@@ -146,8 +146,8 @@ def get_trajs_stats(trajectories, bottom_frame_limit=None, upper_frame_limit=Non
     return scores, games, frames_played, rewards, terminals, actions
 
 def agc_to_gym(game, pic):
-    assert game in ['spaceinvaders', 'qbert', 'mspacman', 'revenge', 'pinball']
-    if game == 'spaceinvaders' or 'mspacman':
+    assert game in ['spaceinvaders', 'qbert', 'mspacman', 'revenge', 'pinball', 'seaquest']
+    if game == 'spaceinvaders' or 'mspacman' or 'seaquest':
         #add  bottom 1px
         #crop top    4px
         newpic = np.vstack([pic, np.zeros((1,pic.shape[1], pic.shape[2]))])[4:,:,:]
@@ -370,7 +370,8 @@ def env2game(name):
              'MsPacman-v3':'mspacman', 
              'VideoPinball-v3':'pinball',
              'MontezumaRevenge-v3':'revenge',
-             'Qbert-v3':'qbert'
+             'Qbert-v3':'qbert',
+             'Seaquest-v3': 'seaquest'
             }
     return GAMES[name]
 
@@ -379,7 +380,8 @@ def game2env(name):
              'mspacman':'MsPacman-v3', 
              'pinball':'VideoPinball-v3',
              'revenge':'MontezumaRevenge-v3',
-             'qbert':'Qbert-v3'
+             'qbert':'Qbert-v3',
+             'seaquest': 'Seaquest-v3'
             }
     return GAMES[name]
 

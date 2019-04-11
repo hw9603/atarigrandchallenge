@@ -18,6 +18,7 @@ There are several options for you:
   * [Ms. Pacman](https://omnomnom.vision.rwth-aachen.de/data/atari_v1_release/mspacman.tar.gz)
   * [Video Pinball](https://omnomnom.vision.rwth-aachen.de/data/atari_v1_release/pinball.tar.gz)
   * [Montezuma's Revenge](https://omnomnom.vision.rwth-aachen.de/data/atari_v1_release/revenge.tar.gz)
+  * [Seaquest](https://omnomnom.vision.rwth-aachen.de/data/atari_v1_release/seaquest.tar.gz)
 
 ## Dataset API
 

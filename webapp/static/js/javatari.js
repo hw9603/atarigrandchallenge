@@ -15436,7 +15436,39 @@ MsPacMan = function() {
     this.frame++;
   };
 };
-
+Seaquest = function() {
+  this.id = 5;
+  this.reset = function() {
+    this.reward   = 0;
+    this.score    = 0;
+    this.lives    = 4;
+    this.terminal = false;
+    this.frame    = 0;
+  };
+  this.reset();
+  this.ADDITIONAL_RESET = null;
+  this.step = function(ram) {
+    var score = doubleIndexDecimalScore('0xE8', '0xE6', ram);
+    // reward cannot get negative in this game. When it does, it means that the score has looped (overflow)
+    this.reward = score - this.score;
+    if(this.reward < 0) {
+      // 10000 is the highest possible score
+      var maximumScore = 10000;
+      this.reward = (maximumScore - this.score) + score; 
+    }
+    this.score = score;
+    this.lives = ram.read('0xC9');
+  
+    tmp = ram.read('0x98') & 0x80;
+    this.terminal = tmp || this.lives == 0;
+    if(tmp == 128) {
+      this.terminal = true;
+    }
+            
+    this.frame++;
+  };
+  
+};
 var envForGame = function(title) {
   switch(title){
     //you get these names from Javatari.cartridge.rom.info.l
@@ -15455,5 +15487,8 @@ var envForGame = function(title) {
     case 'Montezuma\'s Revenge':
     case 'revenge':
       return new Montezuma();
+    case 'Seaquest':
+    case 'seaquest':
+      return new Seaquest();
   }
 };

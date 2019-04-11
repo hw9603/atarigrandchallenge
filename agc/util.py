@@ -5,14 +5,15 @@ import cv2
 ACTIONS = ['NOOP', 'FIRE','UP','RIGHT','LEFT','DOWN','UPRIGHT','UPLEFT','DOWNRIGHT','DOWNLEFT','UPFIRE','RIGHTFIRE','LEFTFIRE','DOWNFIRE','UPRIGHTFIRE','UPLEFTFIRE','DOWNRIGHTFIRE','DOWNLEFTFIRE']
 
 # this list is mostly needed to list the games in the same order everywhere
-GAMES = ['spaceinvaders', 'qbert', 'mspacman', 'pinball','revenge']
+GAMES = ['spaceinvaders', 'qbert', 'mspacman', 'pinball','revenge', 'seaquest']
 
 # pretty titles for plots/tables
 TITLES = {'spaceinvaders': 'Space Invaders',
           'qbert': 'Q*bert',
           'mspacman':'Ms. Pacman',
           'pinball':'Video Pinball',
-          'revenge':'Montezumas\'s Revenge'
+          'revenge':'Montezumas\'s Revenge',
+          'seaquest': 'Seaquest'
          }
 
 def preprocess(state, resize_shape=(84,84)):
@@ -48,6 +49,7 @@ def env2game(name):
              'VideoPinball-v3':'pinball',
              'MontezumaRevenge-v3':'revenge',
              'Qbert-v3':'qbert'
+             'Seaquest-v3': 'seaquest'
             }
     return ENVS[name]
 
@@ -56,6 +58,7 @@ def game2env(name):
              'mspacman':'MsPacman-v3', 
              'pinball':'VideoPinball-v3',
              'revenge':'MontezumaRevenge-v3',
-             'qbert':'Qbert-v3'
+             'qbert':'Qbert-v3',
+             'seaquest': 'Seaquest-v3'
             }
     return GAMES[name]

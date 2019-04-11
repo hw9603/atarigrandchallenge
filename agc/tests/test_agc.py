@@ -8,7 +8,7 @@ from agc.dataset import AtariDataset
 
 class AgcTest(unittest.TestCase):
     DATASET_PATH = '/media/HDD1/data/atari_170306_corrected/'
-    GAMES = set(['spaceinvaders', 'qbert', 'mspacman', 'pinball', 'revenge'])
+    GAMES = set(['spaceinvaders', 'qbert', 'mspacman', 'pinball', 'revenge', 'seaquest'])
 
 
     def __init__(self, *args, **kwargs):

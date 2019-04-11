@@ -173,6 +173,35 @@ MsPacMan = function() {
   };
 };
 
+Seaquest = function() {
+  this.id = 5;
+	this.reset = function(ram) {
+    this.reward   = 0;
+	  this.score    = 0;
+	  this.terminal = false;
+    this.lives    = 4;
+    this.frame    = 0;
+  };
+
+  this.reset();
+  this.ADDITIONAL_RESET = jt.ConsoleControls.JOY0_BUTTON;
+
+  this.step = function(ram){
+    var score = tripleIndexDecimalScore('0xBA', '0xB9', '0xB8', ram);
+    // crazy score when we load the cartridge and the games have not
+    // started yet
+    //if (score == 1650000) {
+    //  score = 0;
+    //}
+    this.reward = score - this.score;
+    this.score = score;
+
+    this.terminal = (ram.read('0xA3') != 0)
+    this.lives = ram.read('0xBB') + 1
+    this.frame++;
+  };
+};
+
 var envForGame = function(title) {
   switch(title){
     //you get these names from Javatari.cartridge.rom.info.l
@@ -191,5 +220,8 @@ var envForGame = function(title) {
     case 'Montezuma\'s Revenge':
     case 'revenge':
       return new Montezuma();
+    case 'Seaquest':
+    case 'seaquest':
+      return new Seaquest();
   }
 };

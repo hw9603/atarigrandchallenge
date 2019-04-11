@@ -10,7 +10,9 @@ var getGameDesc = function(title) {
         return "<p>Press <b>F12</b> to start the game!</p><p>Each time you turn on SPACE INVADERS you will be at war with enemies from space who are threatening the earth. Your objective is to destroy these invaders by firing your laser cannon. You must wipe out the invaders either before they reach the earth (bottom of the screen), or before they hit you three times with their laser bombs.</p><p>Use <b>arrows</b> for moving and <b>SPACE</b> key for firing.</p><p>More details in the <a href='https://atariage.com/manual_html_page.php?SoftwareLabelID=460'>original manual</a>.</p>";
     case "mspacman":
         return "<p>Press <b>F12</b> to start the game!</p><p>Use <b>arrow keys</b> to control MS.PAC-MAN.</p><p>MS.PAC-MAN encounters floating fruit and pretzels while traveling around the maze. Gobble up these munchies, and you score bonus points. But watch out! Fearful ghosts scurry about trying to gobble up MS.PAC-MAN.</p><p>As soon as she gulps down the energy pill, the ghosts turn blue with fright and you can get points for eating them.</p><p>More details in the <a href='https://atariage.com/manual_html_page.php?SoftwareLabelID=320'>original manual</a>.</p>";
-  }
+   case "seaquest":
+        return "<p>Press <b>F12</b> to start the game!</p><p>Use <b>arrow keys</b> to control Seaquest.</p><p>Seaquest should shoot as many enemies as possible.</p><p>More details in the <a href='https://atariage.com/manual_html_page.php?SoftwareLabelID=320'>original manual</a>.</p>";
+}
   return "";
 }
 
