@@ -47,6 +47,7 @@ jt.AtariConsole = function() {
               }
             }
             self.game.step(self.ram);
+            console.log(self.ram)
             controlsSocket.clockPulse();
             if(self.traj_max_frame == self.game.frame - 1) {
               alert('END OF REPLAY');              
@@ -571,8 +572,10 @@ jt.AtariConsole = function() {
     var LEN_SAVE_THRESHOLD = 60;
     this.started = false;
     this.save_seq = function() {
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
       if(Object.keys(trajectory).length > LEN_SAVE_THRESHOLD && !sequence_sent && self.started) {
-        sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score);
+        console.log("###############################")
+          sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score);
       }
     }
 };

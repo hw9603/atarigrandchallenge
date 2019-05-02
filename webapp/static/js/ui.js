@@ -60,7 +60,10 @@ window.onload = function() {
   scores = getScoresForRom(rom);
 }
 
-window.onbeforeunload = function() {Javatari.room.console.save_seq();}; 
+window.onbeforeunload = function() {
+    console.log("hello!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    Javatari.room.console.save_seq();
+};
 
 var load_rom = function(title) {
   Javatari.room.romLoader.loadFromURL(ROM_PATH + title + '.bin');

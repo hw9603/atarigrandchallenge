@@ -173,33 +173,69 @@ MsPacMan = function() {
   };
 };
 
+// Seaquest = function() {
+//   this.id = 5;
+// 	this.reset = function(ram) {
+//     this.reward   = 0;
+// 	  this.score    = 0;
+// 	  this.terminal = false;
+//     this.lives    = 4;
+//     this.frame    = 0;
+//   };
+//
+//   this.reset();
+//   this.ADDITIONAL_RESET = jt.ConsoleControls.JOY0_BUTTON;
+//
+//   this.step = function(ram){
+//     var score = tripleIndexDecimalScore('0xBA', '0xB9', '0xB8', ram);
+//     // crazy score when we load the cartridge and the games have not
+//     // started yet
+//     //if (score == 1650000) {
+//     //  score = 0;
+//     //}
+//     this.reward = score - this.score;
+//     this.score = score;
+//
+//     this.terminal = (ram.read('0xA3') != 0)
+//     this.lives = ram.read('0xBB') + 1
+//     this.frame++;
+//   };
+// };
+
 Seaquest = function() {
   this.id = 5;
-	this.reset = function(ram) {
+  this.reset = function() {
     this.reward   = 0;
-	  this.score    = 0;
-	  this.terminal = false;
+    this.score    = 0;
     this.lives    = 4;
+    this.terminal = false;
     this.frame    = 0;
   };
-
   this.reset();
-  this.ADDITIONAL_RESET = jt.ConsoleControls.JOY0_BUTTON;
-
-  this.step = function(ram){
-    var score = tripleIndexDecimalScore('0xBA', '0xB9', '0xB8', ram);
-    // crazy score when we load the cartridge and the games have not
-    // started yet
-    //if (score == 1650000) {
-    //  score = 0;
-    //}
+  this.ADDITIONAL_RESET = null;
+  this.step = function(ram) {
+   console.log("********")
+    console.log(ram.bytes)
+    var score = tripleIndexDecimalScore('0xBA', '0xB9','0xB8',ram);
+    // reward cannot get negative in this game. When it does, it means that the score has looped (overflow)
     this.reward = score - this.score;
+    if(this.reward < 0) {
+      // 10000 is the highest possible score
+      var maximumScore = 10000;
+      this.reward = (maximumScore - this.score) + score;
+    }
     this.score = score;
+    this.lives = ram.read('0xBB') + 1;
 
-    this.terminal = (ram.read('0xA3') != 0)
-    this.lives = ram.read('0xBB') + 1
+    // tmp = ram.read('0xA3');
+    this.terminal = (this.lives == 0);
+    // if(tmp == 128) {
+    //   this.terminal = true;
+    // }
+
     this.frame++;
   };
+
 };
 
 var envForGame = function(title) {

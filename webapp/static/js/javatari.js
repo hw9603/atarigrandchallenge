@@ -4473,6 +4473,8 @@ jt.AtariConsole = function() {
               }
             }
             self.game.step(self.ram);
+            console.log("**************************")
+            console.log(self.ram)
             controlsSocket.clockPulse();
             if(self.traj_max_frame == self.game.frame - 1) {
               alert('END OF REPLAY');              
@@ -4498,7 +4500,8 @@ jt.AtariConsole = function() {
                 update_score(score); 
               }
             } else {
-              self.save_seq();
+            // console.log("###here called 1st###");
+                self.save_seq();
               sequence_sent = true;
             } 
             controlsSocket.clockPulse();
@@ -4512,6 +4515,7 @@ jt.AtariConsole = function() {
     };
 
     this.resetEnv = function() {
+        // console.log("###here called 2st###")
       self.save_seq();
       self.game.reset();
       sequence_sent = false;
@@ -4997,8 +5001,10 @@ jt.AtariConsole = function() {
     var LEN_SAVE_THRESHOLD = 60;
     this.started = false;
     this.save_seq = function() {
+        // console.log("###here called 3rd###")
       if(Object.keys(trajectory).length > LEN_SAVE_THRESHOLD && !sequence_sent && self.started) {
-        sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score);
+        console.log("###if called###")
+          sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score);
       }
     }
 };
@@ -15418,6 +15424,9 @@ MsPacMan = function() {
   this.ADDITIONAL_RESET = jt.ConsoleControls.JOY0_BUTTON; 
 
   this.step = function(ram){
+    console.log("********")
+    console.log(ram.saveState())
+      // console.log(jt.Util.byteStringToUInt8Array(atob(state.b)))
     var score = tripleIndexDecimalScore('0xF8', '0xF9', '0xFA', ram);
     // crazy score when we load the cartridge and the games have not
     // started yet
@@ -15436,6 +15445,42 @@ MsPacMan = function() {
     this.frame++;
   };
 };
+// Seaquest = function() {
+//   this.id = 5;
+//   this.reset = function() {
+//     this.reward   = 0;
+//     this.score    = 0;
+//     this.lives    = 4;
+//     this.terminal = false;
+//     this.frame    = 0;
+//   };
+//   this.reset();
+//   this.ADDITIONAL_RESET = null;
+//   this.step = function(ram) {
+//    console.log("********")
+//     console.log(ram.bytes)
+//     var score = doubleIndexDecimalScore('0xE8', '0xE6', ram);
+//     // reward cannot get negative in this game. When it does, it means that the score has looped (overflow)
+//     this.reward = score - this.score;
+//     if(this.reward < 0) {
+//       // 10000 is the highest possible score
+//       var maximumScore = 10000;
+//       this.reward = (maximumScore - this.score) + score;
+//     }
+//     this.score = score;
+//     this.lives = ram.read('0xC9');
+//
+//     // tmp = ram.read('0x98') & 0x80;
+//     this.terminal = tmp || this.lives == 0;
+//     if(tmp == 128) {
+//       this.terminal = true;
+//     }
+//
+//     this.frame++;
+//   };
+//
+// };
+
 Seaquest = function() {
   this.id = 5;
   this.reset = function() {
@@ -15448,27 +15493,31 @@ Seaquest = function() {
   this.reset();
   this.ADDITIONAL_RESET = null;
   this.step = function(ram) {
-    var score = doubleIndexDecimalScore('0xE8', '0xE6', ram);
+   console.log("********")
+    console.log(ram.bytes)
+    var score = tripleIndexDecimalScore('0xBA', '0xB9','0xB8',ram);
     // reward cannot get negative in this game. When it does, it means that the score has looped (overflow)
     this.reward = score - this.score;
     if(this.reward < 0) {
       // 10000 is the highest possible score
       var maximumScore = 10000;
-      this.reward = (maximumScore - this.score) + score; 
+      this.reward = (maximumScore - this.score) + score;
     }
     this.score = score;
-    this.lives = ram.read('0xC9');
-  
-    tmp = ram.read('0x98') & 0x80;
+    this.lives = ram.read('0xBB') + 1;
+
+    tmp = ram.read('0xA3');
     this.terminal = tmp || this.lives == 0;
     if(tmp == 128) {
       this.terminal = true;
     }
-            
+
+
     this.frame++;
   };
-  
+
 };
+
 var envForGame = function(title) {
   switch(title){
     //you get these names from Javatari.cartridge.rom.info.l
