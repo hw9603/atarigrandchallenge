@@ -1,3 +1,4 @@
+
 // Copyright 2015 by Paulo Augusto Peccin. See license.txt distributed with this file.
 
 // Main Emulator parameters.
@@ -4494,6 +4495,9 @@ jt.AtariConsole = function() {
               frame_data['reward'] = self.game.reward;
               frame_data['terminal'] = self.game.terminal;
               frame_data['score'] = self.game.score;
+              mystate = self.ram.saveState();
+              myram_state = jt.Util.byteStringToUInt8Array(atob(mystate.b));
+              frame_data['ram_state'] = myram_state;
               trajectory[self.game.frame-1] = frame_data;
               if(self.game.frame % 60 == 0) {
                 var score = self.started ? self.game.score:0;
@@ -5004,7 +5008,9 @@ jt.AtariConsole = function() {
         // console.log("###here called 3rd###")
       if(Object.keys(trajectory).length > LEN_SAVE_THRESHOLD && !sequence_sent && self.started) {
         console.log("###if called###")
-          sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score);
+          state = self.ram.saveState();
+          ram_state = jt.Util.byteStringToUInt8Array(atob(state.b));
+          sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score, ram_state);
       }
     }
 };
@@ -15132,8 +15138,8 @@ tripleIndexDecimalScore = function(lower_index, middle_index, higher_index, ram)
     return score;
 };
 
-var sequenceToServ = function(trajectory, state, game_id, final_score) {
-  return $.ajax({url:'/api/save', type:'POST', contentType:'application/json', data: JSON.stringify({'trajectory':trajectory, 'init_state':state,'game_id':game_id, 'final_score':final_score}), success:function(data){console.log('Sequence ' + data + ' saved.'); //window.location.href='/replay/'+data;
+var sequenceToServ = function(trajectory, state, game_id, final_score, ram_state) {
+  return $.ajax({url:'/api/save', type:'POST', contentType:'application/json', data: JSON.stringify({'trajectory':trajectory, 'init_state':state,'game_id':game_id, 'final_score':final_score, 'ram_state':ram_state}), success:function(data){console.log('Sequence ' + data + ' saved.'); //window.location.href='/replay/'+data;
   }});
 };
 

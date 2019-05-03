@@ -27,3 +27,4 @@ class Trajectory(db.Model):
   init_state = db.Column(db.String)
   actions = db.Column(db.String)
   final_score = db.Column(db.Integer)
+  ram_state = db.Column(db.ARRAY(db.Integer, dimensions=1))

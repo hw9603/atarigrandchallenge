@@ -58,7 +58,10 @@ def index_rom(template, rom):
 def save_sequence():
   resp = request.get_json();
   print('============================')
-  trajectory = Trajectory(game_id = resp['game_id'], player_type_id = 1, init_state = json.dumps(resp['init_state']), actions = json.dumps(resp['trajectory']), final_score=resp['final_score'])
+  print(resp['ram_state'])
+  trajectory = Trajectory(game_id = resp['game_id'], player_type_id = 1, init_state = json.dumps(resp['init_state']), actions = json.dumps(resp['trajectory']), final_score=resp['final_score'],ram_state=resp['ram_state'])
+  # trajectory = Trajectory(game_id=resp['game_id'], player_type_id=1, init_state=json.dumps(resp['init_state']),
+  #                         actions=json.dumps(resp['trajectory']), final_score=resp['final_score'])
   #get traj id here
   db.session.add(trajectory)
   db.session.commit()
