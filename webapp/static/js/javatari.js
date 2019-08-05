@@ -4486,8 +4486,11 @@ jt.AtariConsole = function() {
               if(rom == 'qbert' || rom == 'revenge') {
                 self.started = true;
               }
+              //if(rom == 'seaquest'){
+              //  self.ram.write('0xA3', 0);
+              //}
             }
-            if(!self.game.terminal) {
+            if(( !self.game.terminal && rom !== 'seaquest') || (rom == 'seaquest' && self.game.mytmp === 0) ) {
               self.game.step(self.ram);
               var frame_data = {};
               frame_data['action'] = atariControlsToALE(frameActions, ctrls);
@@ -15489,15 +15492,16 @@ MsPacMan = function() {
 
 Seaquest = function() {
   this.id = 5;
-  this.reset = function() {
+  this.reset = function(ram) {
     this.reward   = 0;
     this.score    = 0;
     this.lives    = 4;
     this.terminal = false;
     this.frame    = 0;
+    this.mytmp = 0;
   };
   this.reset();
-  this.ADDITIONAL_RESET = null;
+  this.ADDITIONAL_RESET = jt.ConsoleControls.JOY0_BUTTON;
   this.step = function(ram) {
    console.log("********")
     console.log(ram.bytes)
@@ -15509,16 +15513,18 @@ Seaquest = function() {
       var maximumScore = 10000;
       this.reward = (maximumScore - this.score) + score;
     }
+    console.log('reward '+this.reward);
+    console.log('score '+this.score);
+    console.log('live '+ram.read('0xBB'));
+
     this.score = score;
-    this.lives = ram.read('0xBB') + 1;
+    this.lives = ram.read('0xBB');
 
-    tmp = ram.read('0xA3');
-    this.terminal = tmp || this.lives == 0;
-    if(tmp == 128) {
-      this.terminal = true;
-    }
-
-
+    this.mytmp = ram.read('0xA3');
+    console.log('terminal '+this.mytmp);
+    this.terminal = (this.mytmp != 0) || this.live == 0;
+//   tmp2 = mytmp+1;
+//    console.log('mytmp2'+tmp2);
     this.frame++;
   };
 
