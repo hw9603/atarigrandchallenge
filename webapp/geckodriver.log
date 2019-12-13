@@ -1,0 +1,25 @@
+1553794776718	geckodriver	INFO	Listening on 127.0.0.1:39363
+1553796113550	geckodriver	INFO	Listening on 127.0.0.1:44389
+1553796114554	mozprofile::profile	INFO	Using profile path /tmp/rust_mozprofile.mgoEHGJVgHPd
+1553796114555	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox
+1553796114556	geckodriver::marionette	INFO	Connecting to Marionette on localhost:42111
+No protocol specified
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :1
+1553797042523	geckodriver	INFO	Listening on 127.0.0.1:44145
+1553797043528	mozprofile::profile	INFO	Using profile path /tmp/rust_mozprofile.hdOPdhIywD6j
+1553797043530	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox
+1553797043532	geckodriver::marionette	INFO	Connecting to Marionette on localhost:42753
+No protocol specified
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :1
+1553797687733	geckodriver	INFO	Listening on 127.0.0.1:38489
+1553797688737	mozprofile::profile	INFO	Using profile path /tmp/rust_mozprofile.ZF7A9oX17j6P
+1553797688740	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox
+1553797688742	geckodriver::marionette	INFO	Connecting to Marionette on localhost:33265
+No protocol specified
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :1

@@ -1,3 +1,8 @@
+DROP TABLE games CASCADE;
+DROP TABLE actions CASCADE;
+DROP TABLE player_types CASCADE;
+DROP TABLE trajectories CASCADE;
+
 CREATE TABLE games        (id serial PRIMARY KEY, name text, rom text, ai_score integer);
 CREATE TABLE actions      (id serial PRIMARY KEY, name text);
 CREATE TABLE player_types (id serial PRIMARY KEY, name text);
@@ -8,7 +13,8 @@ CREATE TABLE trajectories (
                             player_type_id integer REFERENCES player_types(id), 
                             init_state text, 
                             actions text, 
-                            final_score integer
+                            final_score integer,
+                            time_stamp text
                           );
 
 INSERT INTO player_types(id, name) VALUES (0, 'bot');

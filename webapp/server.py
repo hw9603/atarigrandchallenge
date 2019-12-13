@@ -9,6 +9,7 @@ import json
 import numpy as np
 from flask_mobility import Mobility
 from flask_mobility.decorators import mobile_template
+import time
 
 
 from PIL import Image
@@ -58,14 +59,29 @@ def index_rom(template, rom):
 def save_sequence():
   resp = request.get_json();
   print('============================')
-  print(resp['ram_state'])
-  trajectory = Trajectory(game_id = resp['game_id'], player_type_id = 1, init_state = json.dumps(resp['init_state']), actions = json.dumps(resp['trajectory']), final_score=resp['final_score'],ram_state=resp['ram_state'])
+  # print(resp['ram_state'])
+  current_time = str(int(time.time()))
+  trajectory = Trajectory(game_id = resp['game_id'], player_type_id = 1, init_state = json.dumps(resp['init_state']), actions = None, final_score=resp['final_score'], time_stamp=current_time)
   # trajectory = Trajectory(game_id=resp['game_id'], player_type_id=1, init_state=json.dumps(resp['init_state']),
   #                         actions=json.dumps(resp['trajectory']), final_score=resp['final_score'])
   #get traj id here
   db.session.add(trajectory)
   db.session.commit()
-  return str(trajectory.id), 200 
+  # print("IDDDD")
+  # print(trajectory.id)
+  # updated_traj = Trajectory.query.filter_by(id=trajectory.id).first()
+  # updated_traj.actions = json.dumps(resp['trajectory'])
+  # db.session.commit()
+  return str(trajectory.id), 200
+
+@app.route('/api/real_save', methods=['POST'])
+def real_save_sequence():
+  resp = request.get_json()
+  print("id is..... ",resp['traj_id'])
+  updated_traj = Trajectory.query.filter_by(id=int(resp['traj_id'])).first()
+  updated_traj.actions = json.dumps(resp['trajectory'])
+  db.session.commit()
+  return str(resp['traj_id']), 200
 
 @app.route('/about')
 @mobile_template('/{mobile/}about.html')
@@ -93,29 +109,31 @@ def test_save():
 DATASET_PATH = 'data/'
 @app.route('/api/save_trajectory', methods=['POST'])
 def save_trajectory():
-  resp = request.get_json()
-  rom = resp['rom']
-  if rom not in ['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge','seaquest']:
-    return 'Unknown rom', 400
-  traj = resp['trajectory']
-  # get last file in the folder num
-  rom_dir = os.path.join(DATASET_PATH, 'trajectories', rom)
-  dir_files = os.listdir(rom_dir)
-  fn = 0 #start naming from 0
-  if len(dir_files) > 0:
-    dir_files.sort(key=lambda x: int(x.split('.txt')[0]))
-    fn = int(dir_files[-1].split('.txt')[0])+1
-  with open(os.path.join(rom_dir, str(fn)) + '.txt', 'w') as f:
-    f.write('db traj id : %d\n' % resp['seqid'])
-    f.write('frame,reward,score,terminal,action\n')
-    for k in sorted(traj.keys(), key=int):
-      ct = traj[k]
-      f.write('%s,%s,%s,%d,%s\n' % (k,ct['reward'],ct['score'],int(ct['terminal']),ct['action']))
-  os.mkdir(os.path.join(DATASET_PATH, 'screens', rom, str(fn)))
   return 'sequence saved', 200
+#  resp = request.get_json()
+#  rom = resp['rom']
+#  if rom not in ['qbert', 'spaceinvaders', 'mspacman', 'pinball', 'revenge','seaquest']:
+#    return 'Unknown rom', 400
+#  traj = resp['trajectory']
+  # get last file in the folder num
+#  rom_dir = os.path.join(DATASET_PATH, 'trajectories', rom)
+#  dir_files = os.listdir(rom_dir)
+#  fn = resp['seqid']  #start naming from 0
+#  if len(dir_files) > 0:
+#    dir_files.sort(key=lambda x: int(x.split('.txt')[0]))
+#    fn = int(dir_files[-1].split('.txt')[0])+1
+#  with open(os.path.join(rom_dir, str(fn)) + '.txt', 'w') as f:
+#    f.write('db traj id : %d\n' % resp['seqid'])
+#    f.write('frame,reward,score,terminal,action\n')
+#    for k in sorted(traj.keys(), key=int):
+#      ct = traj[k]
+#      f.write('%s,%s,%s,%d,%s,%s\n' % (k,ct['reward'],ct['score'],int(ct['terminal']),ct['action'],ct['ram_state']))
+#  os.mkdir(os.path.join(DATASET_PATH, 'screens', rom, str(fn)))
+#  return 'sequence saved', 200
 
 @app.route('/api/save_frame', methods=['POST'])
 def save_frame():
+  print("save frame get called")
   resp = request.get_json();
   rom = resp['rom']
   rom_dir = os.path.join(DATASET_PATH, 'screens', rom)
@@ -125,6 +143,8 @@ def save_frame():
   fn = 0 
   seq_dir = os.path.join(rom_dir, dir_files[-1])
   seq_files = os.listdir(seq_dir)
+  print(seq_dir)
+  print(len(seq_dir))
   if len(seq_files) > 0:
     seq_files.sort(key=lambda x: int(x.split('.png')[0]))
     fn = int(seq_files[-1].split('.png')[0])+1

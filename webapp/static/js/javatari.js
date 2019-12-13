@@ -4461,25 +4461,25 @@ jt.AtariConsole = function() {
         frameActions = $.extend({}, Javatari.room.controls.getControlStateMap());        
         if(self.game!=null) {
           if(replay) {
-            if(self.game.frame >= 1) {
-              data = Javatari.room.screen.getMonitor().getScreenURL()
-              saveFrame(data, self.rom)
-              var tr = self.traj[self.game.frame]['keys_pressed'];
-              for(var k in tr){
-                //if(isNumeric(tr[k])) {
-                //  controlsSocket.controlValueChanged(parseInt(k), tr[k]);
-                //} else {
-                controlsSocket.controlStateChanged(parseInt(k), tr[k]);
-                //}
-              }
-            }
-            self.game.step(self.ram);
-            console.log("**************************")
-            console.log(self.ram)
-            controlsSocket.clockPulse();
-            if(self.traj_max_frame == self.game.frame - 1) {
-              alert('END OF REPLAY');              
-            }
+             if(self.game.frame >= 1) {
+               data = Javatari.room.screen.getMonitor().getScreenURL()
+               saveFrame(data, self.rom)
+               var tr = self.traj[self.game.frame]['keys_pressed'];
+               for(var k in tr){
+                 //if(isNumeric(tr[k])) {
+                 //  controlsSocket.controlValueChanged(parseInt(k), tr[k]);
+                 //} else {
+                 controlsSocket.controlStateChanged(parseInt(k), tr[k]);
+                 //}
+               }
+             }
+             self.game.step(self.ram);
+             console.log("**************************")
+             console.log(self.ram)
+             controlsSocket.clockPulse();
+             if(self.traj_max_frame == self.game.frame - 1) {
+               alert('END OF REPLAY');
+             }
           } else {
             if (self.game.frame == 1) {
               self.init_state = self.saveState();
@@ -4491,8 +4491,21 @@ jt.AtariConsole = function() {
               //}
             }
             if(( !self.game.terminal && rom !== 'seaquest') || (rom == 'seaquest' && self.game.mytmp === 0) ) {
-              self.game.step(self.ram);
               var frame_data = {};
+              frame_data['screenshot'] = null
+              //if(self.game.frame >= 1) {
+                //data = Javatari.room.screen.getMonitor().getScreenURL()
+                // console.log("============before calling saveFrame============")
+                // saveFrame(data, rom)
+                // frame_data['screenshot'] = data;
+                // console.log(data)
+              //}
+              //if(self.traj_max_frame == self.game.frame - 1) {
+              //  alert('END OF REPLAY');
+              //}
+              /////////////////////////
+              self.game.step(self.ram);
+              // var frame_data = {};
               frame_data['action'] = atariControlsToALE(frameActions, ctrls);
               frame_data['keys_pressed'] = frameActions;
               frame_data['reward'] = self.game.reward;
@@ -5013,7 +5026,15 @@ jt.AtariConsole = function() {
         console.log("###if called###")
           state = self.ram.saveState();
           ram_state = jt.Util.byteStringToUInt8Array(atob(state.b));
-          sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score, ram_state);
+
+
+          traj_id = sequenceToServ(trajectory, self.init_state, self.game.id, self.game.score, ram_state);
+          console.log("&*&*&*&*&*&*");
+          // console.log(traj_id);
+          // while (traj_id.readyState != 4) {}
+
+          // console.log(traj_id.responseText);
+          // realSequenceToServ(trajectory, traj_id);
       }
     }
 };
@@ -15142,7 +15163,25 @@ tripleIndexDecimalScore = function(lower_index, middle_index, higher_index, ram)
 };
 
 var sequenceToServ = function(trajectory, state, game_id, final_score, ram_state) {
-  return $.ajax({url:'/api/save', type:'POST', contentType:'application/json', data: JSON.stringify({'trajectory':trajectory, 'init_state':state,'game_id':game_id, 'final_score':final_score, 'ram_state':ram_state}), success:function(data){console.log('Sequence ' + data + ' saved.'); //window.location.href='/replay/'+data;
+// var sequenceToServ = function(state, game_id, final_score, ram_state) {
+    var d = new Date().getTime()
+  return $.ajax({url:'/api/save', type:'POST', contentType:'application/json', data: JSON.stringify({'init_state':state,'game_id':game_id, 'final_score':final_score, 'time_stamp':d, 'ram_state': ram_state}),
+      success:function(data){
+      console.log('Sequence ' + data + ' saved.'); //window.location.href='/replay/'+data;
+      // alert("Your trajectory id is " + data + ". Please don't close the window until prompted.");
+      realSequenceToServ(trajectory, data);
+  }
+  });
+};
+
+var realSequenceToServ = function(trajectory, traj_id) {
+    console.log("IDDDDDD")
+    console.log(traj_id)
+    var d = new Date().getTime()
+  return $.ajax({url:'/api/real_save', type:'POST', contentType:'application/json', data: JSON.stringify({'trajectory':trajectory, 'traj_id':traj_id}),
+      success:function(data){
+      console.log('Real Sequence ' + data + ' saved.'); //window.location.href='/replay/'+data;
+      alert("Your trajectory id is " + traj_id);
   }});
 };
 
